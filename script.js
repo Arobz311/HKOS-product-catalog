@@ -1,0 +1,37 @@
+const products=[
+["Cotton Combed","Cotton Based","COTTON","Pilihan kain berbasis cotton untuk berbagai kebutuhan apparel.","Tanyakan artikel, komposisi, gramasi, lebar, dan ketersediaan."],
+["Cotton Carded & OE","Cotton Based","COTTON","Pilihan material cotton untuk pengembangan tekstil dan garment.","Spesifikasi mengikuti artikel dan konstruksi yang dipilih."],
+["Supima Cotton","Cotton Based","SUPIMA","Pilihan cotton premium dalam portofolio material.","Ketersediaan dan dokumentasi merek perlu dikonfirmasi."],
+["Ultima Cotton","Cotton Based","ULTIMA","Pilihan material cotton dalam portofolio produk HKTI.","Hubungi tim kami untuk detail artikel."],
+["Organic Cotton","Cotton Based","ORGANIC","Pilihan cotton organik untuk pengembangan koleksi tekstil.","Klaim sertifikasi mengikuti dokumen artikel yang berlaku."],
+["Teteron Cotton (TC)","Cotton Based","TC","Material blend cotton dan polyester untuk beragam aplikasi.","Komposisi aktual mengikuti artikel."],
+["Chief Value Cotton (CVC)","Cotton Based","CVC","Pilihan material cotton blend dalam portofolio kain HKTI.","Tanyakan komposisi dan spesifikasi setiap artikel."],
+["Cotton Spandex","Cotton Blends","STRETCH","Kombinasi cotton dan spandex dengan karakter elastis.","Stretch dan recovery dipengaruhi benang, konstruksi, dan finishing."],
+["Cotton Interlock / Double Knit","Cotton Based","INTERLOCK","Kain rajut double knit untuk berbagai kebutuhan apparel.","Tanyakan gramasi, lebar, dan karakter kain."],
+["Cotton Pique / Lacoste","Cotton Based","PIQUE","Konstruksi rajut pique yang umum digunakan untuk polo.","Pilihan komposisi dan spesifikasi perlu dikonfirmasi."],
+["Cotton Waffle","Cotton Based","WAFFLE","Kain dengan tekstur permukaan menyerupai pola waffle.","Tanyakan pilihan komposisi dan konstruksi."],
+["Cotton Baby Terry","Cotton Based","BABY TERRY","Kain rajut dengan karakter loop pada salah satu sisi.","Spesifikasi dan ketersediaan mengikuti artikel."],
+["Cotton French Terry","Cotton Based","FRENCH TERRY","Material rajut terry untuk pengembangan casualwear.","Hubungi tim kami untuk detail artikel."],
+["TENCEL™ Modal","Cellulose Based","TENCEL™","Pilihan serat berbasis Modal dalam portofolio material.","Klaim merek dan spesifikasi mengikuti dokumentasi produk."],
+["TENCEL™ Micromodal","Cellulose Based","MICROMODAL","Pilihan Modal dengan pengembangan serat berkarakter halus.","Tanyakan artikel dan spesifikasi yang tersedia."],
+["TENCEL™ Modal Ultrafine","Cellulose Based","ULTRAFINE","Pengembangan material Modal ultrafine untuk pilihan handfeel premium.","Detail teknis dikonfirmasi untuk setiap artikel."],
+["TENCEL™ Lyocell (Blend)","Cellulose Based","LYOCELL","Pilihan material berbasis Lyocell dalam komposisi blend.","Komposisi dan ketersediaan mengikuti artikel."],
+["TENCEL™ Luxe","Cellulose Based","LUXE","Pilihan material dalam rangkaian pengembangan cellulose-based.","Hubungi tim kami untuk detail produk."],
+["TENCEL™ REFIBRA™","Cellulose Based","REFIBRA™","Pilihan material dalam portofolio pengembangan serat cellulose.","Klaim dan sertifikasi merujuk dokumen produk."],
+["Lenzing™ ECOVERO™","Cellulose Based","ECOVERO™","Pilihan serat viscose bermerek dalam portofolio cellulose-based.","Ketersediaan dan klaim merek mengikuti dokumen artikel."],
+["Rayon & Teteron Rayon (TR)","Cellulose Based","RAYON","Pilihan material rayon dan rayon blend.","Tanyakan komposisi, konstruksi, dan spesifikasi."],
+["Bamboo Cotton","Cotton Blends","BAMBOO","Pilihan blend bamboo dan cotton dalam portofolio material.","Komposisi aktual mengikuti spesifikasi artikel."],
+["Cotton TENCEL™ Modal","Cotton Blends","COTTON BLEND","Kombinasi cotton dan TENCEL™ Modal untuk material blend.","Tanyakan komposisi dan dokumen pendukung."],
+["Hakuni Comodo","Innovation","HAKUNI","Material nylon blend cotton dan spandex dengan karakter stretch dan recovery.","Klaim performa seperti anti-UV perlu merujuk hasil pengujian artikel."],
+["BIOSMOOTH™ Finishing","Innovation","BIOSMOOTH","Finishing berbasis bio untuk permukaan kain halus dengan fuzz minimal.","Efek finishing bergantung material dasar dan proses aplikasi."],
+["Danball Fabric","Innovation","DANBALL","Kain rajut interlock spacer dengan karakter tebal dan bulky.","Tanyakan konstruksi, gramasi, dan pilihan artikel."],
+["NeoCool Hangtag","Innovation","NEOCOOL","Hangtag dengan konsep cool touch effect untuk komunikasi produk.","Detail spesifikasi dan ketersediaan perlu dikonfirmasi."]
+];
+const grid=document.querySelector("#grid"),search=document.querySelector("#search"),count=document.querySelector("#count"),empty=document.querySelector("#empty");let category="Semua";
+function render(){let q=search.value.toLowerCase().trim();let list=products.map((p,i)=>({...p,i})).filter(p=>(category==="Semua"||p[1]===category)&&p.slice(0,4).join(" ").toLowerCase().includes(q));grid.innerHTML=list.map(p=>`<article class="card"><div class="visual ${p[1]==="Cellulose Based"?"cellulose":p[1]==="Cotton Blends"?"blend":p[1]==="Innovation"?"innovation":""}" data-tag="${p[2]}"></div><div class="cardbody"><span class="category">${p[1]}</span><h3>${p[0]}</h3><p>${p[3]}</p><div class="cardfoot"><span>Detail sesuai artikel</span><button class="detail" data-i="${p.i}">Lihat detail ↗</button></div></div></article>`).join("");count.textContent=list.length+" produk ditampilkan";empty.hidden=list.length>0}
+document.querySelector("#filters").addEventListener("click",e=>{let b=e.target.closest("button[data-cat]");if(!b)return;category=b.dataset.cat;document.querySelectorAll(".filters button").forEach(x=>x.classList.toggle("active",x===b));render()});search.addEventListener("input",render);
+grid.addEventListener("click",e=>{let b=e.target.closest("[data-i]");if(!b)return;let p=products[+b.dataset.i];document.querySelector("#detailContent").innerHTML=`<span class="category">${p[1]}</span><h2>${p[0]}</h2><p>${p[3]}</p><div class="dialognote">${p[4]}</div><p>Untuk informasi spesifikasi atau ketersediaan, salin format inquiry pada bagian kontak dan sertakan nama produk ini.</p><button class="btn orange" id="copyProduct">Salin inquiry produk</button>`;document.querySelector("#detail").showModal();document.querySelector("#copyProduct").onclick=()=>copyText(`Halo HK Official Store by HKTI, saya ingin bertanya tentang ${p[0]}. Mohon informasi spesifikasi, komposisi, gramasi, lebar, minimum pembelian, dan ketersediaan. Terima kasih.`)});
+document.querySelector("#close").onclick=()=>document.querySelector("#detail").close();document.querySelector("#detail").addEventListener("click",e=>{if(e.target.id==="detail")e.target.close()});
+async function copyText(t){try{await navigator.clipboard.writeText(t);alert("Format inquiry berhasil disalin.")}catch{alert(t)}}
+document.querySelector("#copy").onclick=async()=>{let t="Halo HK Official Store by HKTI, saya ingin meminta informasi katalog dan spesifikasi produk kain. Mohon bantuannya. Terima kasih.";try{await navigator.clipboard.writeText(t);document.querySelector("#feedback").textContent="Format inquiry disalin. Silakan tempel di pesan Instagram."}catch{document.querySelector("#feedback").textContent=t}};
+document.querySelector("#year").textContent=new Date().getFullYear();document.querySelector("#menu").onclick=()=>document.querySelector("#nav").classList.toggle("open");document.querySelectorAll("nav a").forEach(a=>a.onclick=()=>document.querySelector("#nav").classList.remove("open"));render();
